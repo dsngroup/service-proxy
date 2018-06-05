@@ -1,0 +1,5 @@
+{
+    "name": "temerature-collector",
+    "protocol": "http",
+    "uri": "127.0.0.1:9283/temperature"
+}
