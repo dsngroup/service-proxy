@@ -22,6 +22,7 @@ const bodyParser = require('body-parser');
 const Inventory = require('./lib/inventory');
 const inventoryStore = require('./lib/inventory-store')('./inventory.db');
 const jsonParser = bodyParser.json();
+const Service = require('./lib/service');
 
 app.get('/', (req, res) => {
   res.send('welcome to registration service.');
@@ -42,5 +43,8 @@ app.get('/inventory', async (req, res) => {
   let result = await inventoryStore.queryAll();
   res.send(JSON.stringify(result));
 });
+
+let service = new Service(new Inventory('google', 'http', 'none'), 1000);
+service.spawn();
 
 app.listen(3000, () => console.log('Registration service listening on http://localhost:3000'));
