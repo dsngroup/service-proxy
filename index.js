@@ -20,7 +20,7 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const Inventory = require('./lib/inventory');
-const inventoryStore = require('./lib/inventory-store')();
+const inventoryStore = require('./lib/inventory-store')('./inventory.db');
 const jsonParser = bodyParser.json();
 
 app.get('/', (req, res) => {
@@ -38,8 +38,9 @@ app.post('/inventory', jsonParser, (req, res) => {
   }
 });
 
-app.get('/inventory', (req, res) => {
-  res.send(JSON.stringify(inventoryStore))
+app.get('/inventory', async (req, res) => {
+  let result = await inventoryStore.queryAll();
+  res.send(JSON.stringify(result));
 });
 
 app.listen(3000, () => console.log('Registration service listening on http://localhost:3000'));
