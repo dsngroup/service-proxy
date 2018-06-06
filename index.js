@@ -24,6 +24,8 @@ const inventoryStore = require('./lib/inventory-store')('./inventory.db');
 const jsonParser = bodyParser.json();
 const Service = require('./lib/service');
 
+let serviceStore = require('./lib/service-store')();
+
 app.get('/', (req, res) => {
   res.send('welcome to registration service.');
 });
@@ -44,7 +46,18 @@ app.get('/inventory', async (req, res) => {
   res.send(JSON.stringify(result));
 });
 
-let service = new Service(new Inventory('google', 'http', 'none'), 1000);
-service.spawn();
+app.get('/start', async (req, res) => {
+  // Spawn all services here with owned inventories.
+  // TODO: should move this to somewhere else.
+  let inventories = await inventoryStore.queryAll();
+  for (let inventoryObj of inventories) {
+    let inventory = Inventory.validInventoryObject(inventoryObj);
+    // TODO: remove hard-coded time.
+    let service = new Service(inventory, 1000);
+    // For future modification indexing.
+    serviceStore.insert(service);
+  }
+  res.send('Ok');
+});
 
 app.listen(3000, () => console.log('Registration service listening on http://localhost:3000'));
