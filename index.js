@@ -46,7 +46,7 @@ app.get('/inventory', async (req, res) => {
   res.send(JSON.stringify(result));
 });
 
-app.get('/start', async (req, res) => {
+app.post('/startAll', async (req, res) => {
   // Spawn all services here with owned inventories.
   // TODO: should move this to somewhere else.
   let inventories = await inventoryStore.queryAll();
